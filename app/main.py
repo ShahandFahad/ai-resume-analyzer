@@ -1,1 +1,44 @@
-# FastAPI entry point
+from fastapi import FastAPI, HTTPException, UploadFile, File
+from app.resume_parser import extract_text_from_pdf
+import tempfile
+
+app = FastAPI()
+
+
+@app.get("/")
+async def welcome():
+    return {"message":"Welcome to resume anaylyzer server!"}
+
+@app.post("/upload-resume/")
+async def upload_resume(file: UploadFile = File(...)):
+
+    # validate file type
+    if not file.filename.endswith(".pdf"):
+        raise HTTPException(status_code=400, detail="Only PDF files are supported.")
+
+
+    # save the uploaded file to a temporary file(.pdf)
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp:
+        # read the content of the uploaded file
+        contents = await file.read()
+
+        # write the contents to temp file
+        temp.write(contents)
+
+        # get temp file path
+        temp_path = temp.name
+
+
+    # pdf parsing
+    try:
+        # Now parse the text from saved PDF, passed the temp file path to the pdf text extractor function
+        text = extract_text_from_pdf(temp_path)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to extract text: {e}")
+
+
+    # return first 500 chars preview
+    return {"parsed_text":text[:500]} 
+
+
+
