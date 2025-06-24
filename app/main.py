@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException, UploadFile, File
+from app.job_parser import parse_job_description
 from app.nlp_utils import extract_entities
 from app.resume_parser import extract_text_from_pdf
 import tempfile
@@ -9,6 +10,7 @@ app = FastAPI()
 @app.get("/")
 async def welcome():
     return {"message":"Welcome to resume anaylyzer server!"}
+
 
 @app.post("/upload-resume/")
 async def upload_resume(file: UploadFile = File(...)):
@@ -46,6 +48,26 @@ async def upload_resume(file: UploadFile = File(...)):
         "resume_text_preview":text[:500],
         "entities": entities
     } 
+
+
+
+@app.post("/upload-job/")
+async def upload_job(file: UploadFile = File(...)):
+    try:
+        # read content of uploaded job file
+        contents = await file.read()
+        text = contents.decode("utf-8")
+
+        # get job info
+        job_info = parse_job_description(text)
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to extract text: {e}")
+
+    return job_info
+
+
+
 
 
 
