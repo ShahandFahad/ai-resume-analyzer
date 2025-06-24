@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException, UploadFile, File
+from app.nlp_utils import extract_entities
 from app.resume_parser import extract_text_from_pdf
 import tempfile
 
@@ -33,12 +34,18 @@ async def upload_resume(file: UploadFile = File(...)):
     try:
         # Now parse the text from saved PDF, passed the temp file path to the pdf text extractor function
         text = extract_text_from_pdf(temp_path)
+
+        # Pass the parsed text from pdf and extract entitites
+        entities = extract_entities(text)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to extract text: {e}")
 
 
     # return first 500 chars preview
-    return {"parsed_text":text[:500]} 
+    return {
+        "resume_text_preview":text[:500],
+        "entities": entities
+    } 
 
 
 
