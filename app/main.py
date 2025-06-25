@@ -3,6 +3,9 @@ from app.job_parser import parse_job_description
 from app.nlp_utils import extract_entities
 from app.resume_parser import extract_text_from_pdf
 import tempfile
+from pydantic import BaseModel
+from app.model import compute_match_score
+
 
 app = FastAPI()
 
@@ -68,6 +71,10 @@ async def upload_job(file: UploadFile = File(...)):
 
 
 
+class MatchRequest(BaseModel):
+    resume_skills: list[str]
+    job_skills: list[str]
 
-
-
+@app.post("/match-resume-job/")
+def match_resume_job(data: MatchRequest):
+    return compute_match_score(data.resume_skills, data.job_skills)
