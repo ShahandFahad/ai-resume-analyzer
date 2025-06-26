@@ -4,7 +4,7 @@ from app.nlp_utils import extract_entities
 from app.resume_parser import extract_text_from_pdf
 import tempfile
 from pydantic import BaseModel
-from app.model import compute_match_score
+from app.model import compute_match_score, compute_semantic_similarity
 
 
 app = FastAPI()
@@ -78,3 +78,26 @@ class MatchRequest(BaseModel):
 @app.post("/match-resume-job/")
 def match_resume_job(data: MatchRequest):
     return compute_match_score(data.resume_skills, data.job_skills)
+
+
+
+class SemanticMatchRequest(BaseModel):
+    resume_text: str
+    job_text: str
+
+@app.post("/semantic-match/")
+def semantic_match(data: SemanticMatchRequest):
+    score = compute_semantic_similarity(data.resume_text, data.job_text)
+
+    return {
+        "semantic_similarity_score": score,
+        "interpretation": interpret_score(score)
+    }
+
+def interpret_score(score):
+    if score > 85:
+        return "Strong Match"
+    elif score > 60:
+        return "Moderate Match"
+    else:
+        return "Weak Match"
