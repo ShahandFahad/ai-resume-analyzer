@@ -1,3 +1,4 @@
+## Under work...
 
 ## Enpoints
 ```bash
@@ -36,6 +37,15 @@
         "resume_text": "I have experience in React, Python, FastAPI, and deploying ML models. I worked on a customer support AI chatbot.",
         "job_text": "Looking for a MERN Stack developer who can integrate NLP-based AI models using FastAPI and React. Should be comfortable with Python and MongoDB."
     }
+
+
+ 5. POST /full-analysis/ | Upload (resume.pdf) and `job_text` to get complete analysis via singel endpoint
+  curl -X POST http://localhost:8000/full-analysis/ \
+  -H "accept: application/json" \
+  -H "Content-Type: multipart/form-data" \
+  -F "resume_pdf=@Resume.pdf" \
+  -F "job_txt=We are hiring a full-stack AI developer with expertise in Fast"
+
 
 
 

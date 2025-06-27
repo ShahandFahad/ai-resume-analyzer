@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException, UploadFile, File
+from fastapi.param_functions import Form
 from app.job_parser import parse_job_description
 from app.nlp_utils import extract_entities
 from app.resume_parser import extract_text_from_pdf
@@ -101,3 +102,58 @@ def interpret_score(score):
         return "Moderate Match"
     else:
         return "Weak Match"
+
+
+# Combining all the above work into this single endpoint
+@app.post("/full-analysis/")
+async def full_analysis(resume_pdf: UploadFile = File(...), job_txt: str = Form(...)):
+
+    try:
+        # validate file type
+        if not resume_pdf.filename.endswith(".pdf"):
+            raise HTTPException(status_code=400, detail="Only .pdf file are supported for resume.")
+
+        #if not job_txt.filename.endswith(".txt"):
+        #    raise HTTPException(status_code=400, detail="Only .txt file are supported for job.")
+
+
+        # save and read resume: using temprory package to store resume
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp:
+            # get file contents
+            contents = await resume_pdf.read()
+            # store content in temp file
+            temp.write(contents)
+            # get temp file path
+            temp_file_path = temp.name
+
+
+            # extract text from resume
+            resume_text = extract_text_from_pdf(temp_file_path)
+            # extract entities i.e. Skills, etc from reusme text
+            resume_entities = extract_entities(resume_text)
+            # get resume skills
+            resume_skills = resume_entities.get("SKILLS", [])
+
+
+            # parse job descriptions & skills
+            job_info = parse_job_description(job_txt)
+            job_skills = job_info.get("required_skills", [])
+
+
+            # perform both matches - keyword match & semantic match
+            keyword_score = compute_match_score(resume_skills, job_skills)
+            semantic_score = compute_semantic_similarity(resume_text, job_info["job_text"])
+
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to fully analyze: {e}")
+
+
+    return {
+        "matching_skills": keyword_score["matching_skills"],
+        "missing_skills": keyword_score["missing_skills"],
+        "extra_resume_skills": keyword_score["extra_resume_skills"],
+        "keyword_match_score": keyword_score["score_percent"],
+        "semantic_similarity_score": semantic_score,
+        "interpretation": interpret_score(semantic_score)
+    }
