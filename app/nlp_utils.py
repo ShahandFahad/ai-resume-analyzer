@@ -35,13 +35,21 @@ def extract_entities(text):
 
 
 # Custom logic
-# Very basic keyword match for now - will replace with vector matching later
+# Basic keyword match via pre-defined skills (NOTE: for vector embeddings - it is used in model.py file)
 def extract_skills(text):
     predefined_skills = [
             "Python", "Machine Learning", "React", "Node.js",
-            "MongoDB", "JavaScript", "FastAPI", "NLP", "Git", "Docker"
-            ]
-
+            "MongoDB", "JavaScript", "FastAPI", "NLP", "Git", "Docker",
+            "SQL", "AWS", "Azure", "GCP", "Kubernetes", "Data Analysis",
+            "Data Science", "Deep Learning", "TensorFlow", "PyTorch",
+            "Agile", "Scrum", "REST API", "Microservices", "Vue.js", "Angular",
+            "Java", "C++", "C#", "Go", "Ruby", "PHP", "Scala", "Kotlin",
+            "HTML", "CSS", "TypeScript", "Django", "Flask", "Spring Boot",
+            "Kafka", "RabbitMQ", "Redis", "Elasticsearch", "Jenkins", "Ansible",
+            "Terraform", "Linux", "Windows Server", "Networking", "Security",
+            "Cloud Computing", "Big Data", "Spark", "Hadoop", "Tableau", "Power BI",
+            "Excel", "Statistics", "Mathematics", "Communication", "Teamwork"
+    ]
     # store matching skilss
     found = []
     
