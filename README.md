@@ -1,5 +1,10 @@
 ## Under work...
 
+Resume Analyzer using NLP -> `Keyword Match` Analysis via NLP & -> `Sematic Anaylysis` via Sentence-Tranformers from `Hugging Face`.
+
+It is still under development....
+
+
 ## Enpoints
 ```bash
 
@@ -40,11 +45,11 @@
 
 
  5. POST /full-analysis/ | Upload (resume.pdf) and `job_text` to get complete analysis via singel endpoint
-  curl -X POST http://localhost:8000/full-analysis/ \
-  -H "accept: application/json" \
-  -H "Content-Type: multipart/form-data" \
-  -F "resume_pdf=@Resume.pdf" \
-  -F "job_txt=We are hiring a full-stack AI developer with expertise in Fast"
+ curl -X POST http://localhost:8000/full-analysis/ \
+         -H "accept: application/json" \
+         -H "Content-Type: multipart/form-data" \
+         -F "resume_pdf=@FahadResume.pdf" \
+         -F "job_txt=We are hiring a full-stack AI developer with expertise in Fast. Required Skills: Java, Python C++, Node.js, Flask, FastAPI, Aws, DigitalOcean, CI/CD, Version Control, Git, React.js, Mern Stack, Code Review, Deployment"
 
 
 
