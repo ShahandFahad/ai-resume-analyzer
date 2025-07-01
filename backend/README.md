@@ -1,12 +1,13 @@
-## Under work...
-
-Resume Analyzer using NLP -> `Keyword Match` Analysis via NLP & -> `Sematic Anaylysis` via Sentence-Tranformers from `Hugging Face`.
-
-It is still under development....
-
-
-## API Docs
-https://shah-fahad-ai-resume-analyzer-backend-api.hf.space/docs/
+---
+title: Ai Resume Analyzer
+emoji: 👀
+colorFrom: purple
+colorTo: green
+sdk: docker
+pinned: false
+license: mit
+short_description: Using Sentence Transformers to Semantically Analyze Resumes.
+---
 
 ## Enpoints
 ```bash
@@ -56,7 +57,9 @@ https://shah-fahad-ai-resume-analyzer-backend-api.hf.space/docs/
 
 
 
-
  ```
 
+## How to Use:
+Make API requests to `https://shah-fahad-ai-resume-analyzer-backend-api.hf.space/`.
 
+Check out the configuration reference at https://huggingface.co/docs/hub/spaces-config-reference
