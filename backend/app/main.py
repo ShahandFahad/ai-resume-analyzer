@@ -7,8 +7,14 @@ import tempfile
 from pydantic import BaseModel
 from app.model import compute_match_score, compute_semantic_similarity
 
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+# add middlewares
+app.add_middleware(
+        CORSMiddleware,
+    )
 
 
 @app.get("/")
