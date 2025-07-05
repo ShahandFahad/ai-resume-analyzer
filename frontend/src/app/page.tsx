@@ -1,4 +1,6 @@
 'use client'
+import { HomePageTitle } from "@/components/HomePageTitle";
+import { HowToUse } from "@/components/HowToUse";
 import Loader from "@/components/Loader";
 import { ResultTable } from "@/components/ResultTable";
 import { UploadForm } from "@/components/UploadForm";
@@ -32,15 +34,19 @@ export default function Home() {
 
 
     return (
-        <main className="p-8">
-            <h1 className="text-2xl font-bold mb-4">AI: Resume Analyzer</h1>
+        <div>
+            <HomePageTitle />
+            <main className="p-4">
 
-            <UploadForm onSubmit={handleUpload} />
+                <HowToUse />
 
-            {loading && <Loader />}
+                <UploadForm onSubmit={handleUpload} />
 
-            <ResultTable results={results} />
+                {loading && <Loader />}
 
-        </main>
+                <ResultTable results={results} />
+
+            </main>
+        </div>
     );
 }
