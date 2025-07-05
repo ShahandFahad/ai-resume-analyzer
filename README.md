@@ -1,62 +1,102 @@
-## Under work...
+# SkillMatchAI
 
-Resume Analyzer using NLP -> `Keyword Match` Analysis via NLP & -> `Sematic Anaylysis` via Sentence-Tranformers from `Hugging Face`.
+**SkillMatchAI** is an intelligent resume-job matching system built with **FastAPI**, **Hugging Face Transformers**, and **Next.js**. It supports:
 
-It is still under development....
+- 📄 Uploading one or more PDF resumes
+- 🧠 Semantic + keyword-based job matching
+- 📊 Visual match reports and score tables
+- 🚀 Frontend with React + Tailwind (Next.js)
 
+---
 
-## API Docs
-https://shah-fahad-ai-resume-analyzer-backend-api.hf.space/docs/
+## 📁 Monorepo Structure
 
-## Enpoints
+```
+resume-analyzer/            ← root folder
+├── backend/                ← FastAPI app
+│   ├── app/                ← all backend logic
+│   ├── Dockerfile
+│   └── requirements.txt
+├── frontend/               ← Next.js (App Router)
+│   ├── app/
+│   ├── components/
+│   ├── tailwind.config.js
+│   └── public/
+├── docker-compose.yml      ← Run both services together
+└── README.md
+```
+
+---
+
+## 🛠️ Backend Setup (FastAPI)
+
 ```bash
+cd backend
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -r requirements.txt
 
+# Run the API
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
 
- 1. POST /upload-resume/ | Upload .pdf file contains reusme
- curl -X POST -F "file=@TempResume.pdf" http://127.0.0.1:8000/upload-resume/
+Visit the API docs: http://localhost:8000/docs
 
+---
 
- 2. POST /upload-job/ | Upload .txt file contains job description
- curl -X POST -F "file=@sample_job.txt" http://127.0.0.1:8000/upload-job/
+## 💻 Frontend Setup (Next.js)
 
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
- 3. POST /match-resume-job/ | Upload (request body) in json format `resume_skills` and `job_skilss` to get insights
- curl --header "Content-Type: application/json"\
-     --request POST \
-     --data @body.json \
-     http://localhost:8000/match-resume-job/ > temp.json
+Frontend will run at: http://localhost:3000
 
-  body.json
-     {
-        "resume_skills": ["Python", "React", "MongoDB", "Customer Service"],
-        "job_skills": ["Python", "React", "Node.js", "MongoDB", "FastAPI", "NLP", "Docker"]
-      }
+Make sure the backend is running on `localhost:8000` or update `NEXT_PUBLIC_BACKEND_URL` in `.env`
 
+---
 
- 4. POST /semantic-match/ | Upload (request body) in json format `resume_text` and `job_text` to get semantic results
- curl --header "Content-Type: application/json"\
-         --request POST \
-         --data @body.json \
-         http://localhost:8000/semantic-match/ > temp.json
- 
- body.json
+## ⚡ Docker + Compose Setup
 
-    {
-        "resume_text": "I have experience in React, Python, FastAPI, and deploying ML models. I worked on a customer support AI chatbot.",
-        "job_text": "Looking for a MERN Stack developer who can integrate NLP-based AI models using FastAPI and React. Should be comfortable with Python and MongoDB."
-    }
+```bash
+# Run both frontend and backend
+docker-compose up --build
+```
 
+- Frontend: http://localhost:3000
+- Backend: http://localhost:8000/docs
 
- 5. POST /full-analysis/ | Upload (resume.pdf) and `job_text` to get complete analysis via singel endpoint
- curl -X POST http://localhost:8000/full-analysis/ \
-         -H "accept: application/json" \
-         -H "Content-Type: multipart/form-data" \
-         -F "resume_pdf=@FahadResume.pdf" \
-         -F "job_txt=We are hiring a full-stack AI developer with expertise in Fast. Required Skills: Java, Python C++, Node.js, Flask, FastAPI, Aws, DigitalOcean, CI/CD, Version Control, Git, React.js, Mern Stack, Code Review, Deployment"
+---
 
+## ✨ Features
 
+- Resume parsing using PyMuPDF
+- Named Entity Recognition using spaCy
+- Job parsing via keyword extraction (NLP)
+- Semantic matching using HuggingFace's MiniLM
+- Full analysis with both methods
+- React frontend with resume upload and result table
 
+---
 
- ```
+## 🧠 Tech Stack
 
+- **Backend**: Python, FastAPI, Hugging Face Transformers, spaCy, PyMuPDF
+- **Frontend**: React, Next.js (App Router), Tailwind CSS
+- **Infra**: Docker, Docker Compose
 
+---
+
+## 🧪 How to Use
+
+1. Open http://localhost:3000
+2. Upload one or more PDF resumes
+3. Paste job description text
+4. Click "Analyze Resumes"
+5. View keyword and semantic scores in table
+6. Click "Detail" for full resume vs job analysis
+7. Click "Download" to save resume locally
+
+---
