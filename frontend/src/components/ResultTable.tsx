@@ -24,85 +24,53 @@ export const ResultTable = ({ results }: { results: any[] }) => {
     if (!results.length) return null;
 
     return (
-        <div className="p-6 overflow-scroll px-0">
-            <table className="mt-4 w-full min-w-max table-auto text-left">
-                <thead>
+        <div className="overflow-x-auto p-6 bg-white rounded-lg shadow-md max-w-full">
+            <table className="w-full min-w-max table-auto border-collapse">
+                <thead className="bg-indigo-50 sticky top-0 z-10">
                     <tr>
-                        <th className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
-                            <p className="antialiased font-sans text-sm text-blue-gray-900 font-normal leading-none opacity-70">
-                                Resume
-                            </p>
-                        </th>
-                        <th className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
-                            <p className="antialiased font-sans text-sm text-blue-gray-900 font-normal leading-none opacity-70">
-                                Keyword Match
-                            </p>
-                        </th>
-                        <th className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
-                            <p className="antialiased font-sans text-sm text-blue-gray-900 font-normal leading-none opacity-70">
-                                Semantic Score
-                            </p>
-                        </th>
-                        <th className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50">
-                            <p className="antialiased font-sans text-sm text-blue-gray-900 font-normal leading-none opacity-70">
-                                Actions
-                            </p>
-                        </th>
+                        {['Resume', 'Keyword Match', 'Semantic Score', 'Actions'].map((header) => (
+                            <th
+                                key={header}
+                                scope="col"
+                                className="cursor-pointer border-b border-indigo-200 p-4 text-left text-sm font-semibold text-indigo-700 hover:bg-indigo-100 transition-colors select-none"
+                            >
+                                {header}
+                            </th>
+                        ))}
                     </tr>
                 </thead>
-
                 <tbody>
-                    {
-                        results.map((item, idx) => (
-                            <tr key={idx}>
+                    {results.map((item, idx) => (
+                        <tr
+                            key={idx}
+                            className="border-b border-indigo-100 hover:bg-indigo-50 transition-colors"
+                        >
+                            <td className="p-4 text-indigo-900 text-sm font-medium">{item.filename}</td>
+                            <td className="p-4 text-indigo-900 text-sm">{item.keyword_match_score}%</td>
+                            <td className="p-4 text-indigo-900 text-sm">{item.semantic_similarity_score}%</td>
+                            <td className="p-4 flex space-x-3">
+                                <button
+                                    onClick={() => router.push(`/detail/${idx}?data=${encodeURIComponent(JSON.stringify(item))}`)}
+                                    aria-label={`View details for ${item.filename}`}
+                                    className="group relative flex items-center justify-center w-10 h-10 rounded-lg text-indigo-600 hover:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                                    type="button"
+                                >
+                                    <Eye className="w-5 h-5 group-hover:text-indigo-800" />
+                                    <span className="sr-only">View Details</span>
+                                </button>
 
-                                <td className="p-4 border-b border-blue-gray-50">
-                                    <p className="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-normal">
-                                        {item.filename}
-                                    </p>
-                                </td>
-
-
-                                <td className="p-4 border-b border-blue-gray-50">
-                                    <p className="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-normal">
-                                        {item.keyword_match_score}
-                                    </p>
-                                </td>
-
-
-                                <td className="p-4 border-b border-blue-gray-50">
-                                    <p className="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-normal">
-                                        {item.semantic_similarity_score}
-                                    </p>
-                                </td>
-
-                                <td className="p-4 border-b border-blue-gray-50">
-
-                                    <button
-
-                                        onClick={() => {
-                                            router.push(`/detail/${idx}?data=${encodeURIComponent(JSON.stringify(item))}`)
-                                        }}
-                                        className="cursor-pointer relative align-middle select-none font-sans font-medium text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none w-10 max-w-[40px] h-10 max-h-[40px] rounded-lg text-xs text-blue-gray-500 hover:bg-blue-gray-500/10 active:bg-blue-gray-500/30" type="button">
-                                        <span className="absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2">
-                                            <Eye />
-                                        </span>
-                                    </button>
-
-                                    <button
-
-                                        onClick={() => handleDownload(item.file)}
-                                        className="cursor-pointer relative align-middle select-none font-sans font-medium text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none w-10 max-w-[40px] h-10 max-h-[40px] rounded-lg text-xs text-blue-gray-500 hover:bg-blue-gray-500/10 active:bg-blue-gray-500/30" type="button">
-                                        <span className="absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2">
-                                            <Download />
-                                        </span>
-                                    </button>
-
-
-                                </td>
-                            </tr>
-                        ))
-                    }
+                                <button
+                                    onClick={() => handleDownload(item.file)}
+                                    aria-label={`Download ${item.filename}`}
+                                    className="group relative flex items-center justify-center w-10 h-10 rounded-lg text-indigo-600 hover:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                                    type="button"
+                                >
+                                    <Download className="w-5 h-5 group-hover:text-indigo-800" />
+                                    <span className="sr-only">Download</span>
+                                </button>
+                            </td>
+                        </tr>
+                    ))}
                 </tbody>
             </table>
         </div>
